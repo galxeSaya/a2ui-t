@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 一点点基础样式，让没跑 Tailwind 时也不至于太丑 */
+:root {
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica,
+    Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background: #ffffff;
+  color: #0f172a;
+}
+
