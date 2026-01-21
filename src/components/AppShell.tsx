@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { applyThemeMode, getInitialThemeMode, resolveScheme, type ThemeMode } from '../theme'
 
-const navItems = [
+/* const navItems = [
   { to: '/', label: '首页', end: true },
   { to: '/playground', label: 'A2UI Playground' },
   { to: '/about', label: '关于' },
@@ -10,7 +10,7 @@ const navItems = [
 
 function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ')
-}
+} */
 
 export function AppShell() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => getInitialThemeMode())
@@ -37,7 +37,7 @@ export function AppShell() {
 
           <div className="flex items-center gap-2">
             <nav className="flex items-center gap-1">
-            {navItems.map((item) => (
+            {/* {navItems.map((item) => (
               <NavLink
                 key={item.to}
                 to={item.to}
@@ -53,7 +53,7 @@ export function AppShell() {
               >
                 {item.label}
               </NavLink>
-            ))}
+            ))} */}
             </nav>
 
             <button
