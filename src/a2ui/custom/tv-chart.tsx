@@ -150,6 +150,27 @@ function createDatafeed(bars: TVBar[]) {
   }
 }
 
+// 获取正确的 base path，确保在生产环境中也能正确工作
+function getBasePath(): string {
+  // 优先使用 Vite 的 BASE_URL（构建时会注入）
+  const viteBase = import.meta.env.BASE_URL
+  if (viteBase && viteBase !== '/') {
+    return viteBase.endsWith('/') ? viteBase.slice(0, -1) : viteBase
+  }
+  
+  // 如果 BASE_URL 是 '/' 或不可用，从当前页面路径推断
+  // 例如：如果当前路径是 /a2ui-t/index.html，则 base 应该是 /a2ui-t
+  const pathname = window.location.pathname
+  // 匹配类似 /a2ui-t/ 或 /a2ui-t/index.html 的路径
+  const match = pathname.match(/^(\/[^/]+)/)
+  if (match && match[1] !== '/') {
+    return match[1]
+  }
+  
+  // 默认返回根路径
+  return ''
+}
+
 // 动态加载 TradingView 库
 function loadTradingViewLibrary(): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -178,9 +199,7 @@ function loadTradingViewLibrary(): Promise<void> {
     // 加载 TradingView 库（仅本地路径，使用 BASE_URL 前缀）
     const script = document.createElement('script')
     script.setAttribute('data-tradingview-loading', 'true')
-    const meta = import.meta as unknown as { env?: { BASE_URL?: string } }
-    const base = meta.env?.BASE_URL || '/'
-    const normalizedBase = String(base).endsWith('/') ? String(base).slice(0, -1) : String(base)
+    const normalizedBase = getBasePath()
     script.src = `${normalizedBase}/tradingview/charting_library/charting_library.js`
     script.onload = () => {
       script.removeAttribute('data-tradingview-loading')
@@ -210,9 +229,7 @@ export function TVChart(props: TVChartProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const widgetRef = useRef<{ remove: () => void } | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const meta = import.meta as unknown as { env?: { BASE_URL?: string } }
-  const base = meta.env?.BASE_URL || '/'
-  const normalizedBase = String(base).endsWith('/') ? String(base).slice(0, -1) : String(base)
+  const normalizedBase = getBasePath()
 
   const bars = useMemo(() => {
     let src: unknown = data
