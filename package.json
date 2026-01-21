@@ -13,6 +13,8 @@
   "dependencies": {
     "@a2ui/lit": "^0.8.1",
     "@lit-labs/signals": "^0.2.0",
+    "echarts": "^5.6.0",
+    "echarts-gl": "^2.0.9",
     "lit": "^3.3.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
+    "@types/echarts": "^4.9.22",
     "@types/node": "^22.10.10",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",

@@ -15,3 +15,54 @@ body {
   color: #0f172a;
 }
 
+/* A2UI 元素样式：官网的 h 和 p 标签没有 margin */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+/* 确保 A2UI Text 组件内部的元素也没有 margin */
+/* 注意：shadow-root 内的样式是隔离的，如果 shadow-root 是 open 的，这些规则应该能穿透 */
+a2ui-text::part(section) h1,
+a2ui-text::part(section) h2,
+a2ui-text::part(section) h3,
+a2ui-text::part(section) h4,
+a2ui-text::part(section) h5,
+a2ui-text::part(section) h6,
+a2ui-text::part(section) p,
+a2ui-text section h1,
+a2ui-text section h2,
+a2ui-text section h3,
+a2ui-text section h4,
+a2ui-text section h5,
+a2ui-text section h6,
+a2ui-text section p {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+/* 针对 h3 元素的特殊处理 */
+a2ui-text section h3 {
+  margin: 0 !important;
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+/* 确保 layout-m-0 类正确应用 */
+.layout-m-0 {
+  margin: 0 !important;
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+/* 确保 A2UI Text 的 section 元素也没有 margin */
+a2ui-text section {
+  margin: 0 !important;
+}
+
+/* 确保全局 h 和 p 标签没有 margin */
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0 !important;
+}

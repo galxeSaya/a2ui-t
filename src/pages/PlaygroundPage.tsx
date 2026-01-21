@@ -10,29 +10,749 @@ const DEFAULT_SURFACE_ID = v0_8.Data.A2uiMessageProcessor.DEFAULT_SURFACE_ID
 // CopilotKit A2UI Composer（a2ui-composer.ag-ui.com）对齐格式：
 // - components：ComponentInstance[]
 // - data：普通对象
-const DEFAULT_COMPONENTS_JSON = `[
+/* const DEFAULT_COMPONENTS_JSON = `[
   {
     "id": "root",
     "component": {
       "Card": {
-        "child": "content"
+        "child": "col"
       }
     }
   },
   {
-    "id": "content",
+    "id": "col",
+    "component": {
+      "Column": {
+        "children": {
+          "explicitList": ["title", "table1", "table2"]
+        }
+      }
+    }
+  },
+  {
+    "id": "title",
     "component": {
       "Text": {
+        "usageHint": "h2",
         "text": {
           "path": "/title"
         }
       }
     }
+  },
+  {
+    "id": "table1",
+    "component": {
+      "table-v1": {
+        "dataPath": "/rows",
+        "columns": [
+          { "key": "name", "label": "姓名" },
+          { "key": "role", "label": "角色" },
+          { "key": "score", "label": "分数" }
+        ]
+      }
+    }
+  },
+  {
+    "id": "table2",
+    "component": {
+      "table-v2": {
+        "dataPath": "/rowsV2",
+        "columns": [
+          { "key": "name", "label": "姓名" },
+          { "key": "role", "label": "角色" },
+          { "key": "score", "label": "分数" }
+        ]
+      }
+    }
   }
+]` */
+
+const DEFAULT_COMPONENTS_JSON = `[
+  {
+    "id": "root",
+    "component": {
+      "Card": {
+        "child": "main-column"
+      }
+    }
+  },
+  {
+    "id": "main-column",
+    "component": {
+      "Column": {
+        "children": {
+          "explicitList": [
+            "header-row",
+            "route-row",
+            "divider",
+            "times-row",
+            "table2",
+            "any-chart",
+            "any-chart"
+          ]
+        },
+        "gap": "none",
+        "alignment": "stretch"
+      }
+    }
+  },
+  {
+    "id": "header-row",
+    "component": {
+      "Row": {
+        "children": {
+          "explicitList": [
+            "header-left",
+            "date"
+          ]
+        },
+        "distribution": "spaceBetween",
+        "alignment": "center"
+      }
+    }
+  },
+  {
+    "id": "header-left",
+    "component": {
+      "Row": {
+        "children": {
+          "explicitList": [
+            "flight-indicator",
+            "flight-number"
+          ]
+        },
+        "gap": "small",
+        "alignment": "center"
+      }
+    }
+  },
+  {
+    "id": "flight-indicator",
+    "component": {
+      "Icon": {
+        "name": {
+          "literalString": "flight"
+        }
+      }
+    }
+  },
+  {
+    "id": "flight-number",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/flightNumber"
+        },
+        "usageHint": "h3"
+      }
+    }
+  },
+  {
+    "id": "date",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/date"
+        },
+        "usageHint": "caption"
+      }
+    }
+  },
+  {
+    "id": "route-row",
+    "component": {
+      "Row": {
+        "children": {
+          "explicitList": [
+            "origin",
+            "arrow",
+            "destination"
+          ]
+        },
+        "gap": "small",
+        "alignment": "center"
+      }
+    }
+  },
+  {
+    "id": "origin",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/origin"
+        },
+        "usageHint": "h2"
+      }
+    }
+  },
+  {
+    "id": "arrow",
+    "component": {
+      "Text": {
+        "text": {
+          "literalString": "→"
+        },
+        "usageHint": "h2"
+      }
+    }
+  },
+  {
+    "id": "destination",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/destination"
+        },
+        "usageHint": "h2"
+      }
+    }
+  },
+  {
+    "id": "divider",
+    "component": {
+      "Divider": {}
+    }
+  },
+  {
+    "id": "times-row",
+    "component": {
+      "Row": {
+        "children": {
+          "explicitList": [
+            "departure-col",
+            "status-col",
+            "arrival-col"
+          ]
+        },
+        "distribution": "spaceBetween"
+      }
+    }
+  },
+  {
+    "id": "departure-col",
+    "component": {
+      "Column": {
+        "children": {
+          "explicitList": [
+            "departure-label",
+            "departure-time"
+          ]
+        },
+        "alignment": "start",
+        "gap": "none"
+      }
+    }
+  },
+  {
+    "id": "departure-label",
+    "component": {
+      "Text": {
+        "text": {
+          "literalString": "Departs"
+        },
+        "usageHint": "caption"
+      }
+    }
+  },
+  {
+    "id": "departure-time",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/departureTime"
+        },
+        "usageHint": "h3"
+      }
+    }
+  },
+  {
+    "id": "status-col",
+    "component": {
+      "Column": {
+        "children": {
+          "explicitList": [
+            "status-label",
+            "status-value"
+          ]
+        },
+        "alignment": "center",
+        "gap": "none"
+      }
+    }
+  },
+  {
+    "id": "status-label",
+    "component": {
+      "Text": {
+        "text": {
+          "literalString": "Status"
+        },
+        "usageHint": "caption"
+      }
+    }
+  },
+  {
+    "id": "status-value",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/status"
+        },
+        "usageHint": "body"
+      }
+    }
+  },
+  {
+    "id": "arrival-col",
+    "component": {
+      "Column": {
+        "children": {
+          "explicitList": [
+            "arrival-label",
+            "arrival-time"
+          ]
+        },
+        "alignment": "end",
+        "gap": "none"
+      }
+    }
+  },
+  {
+    "id": "arrival-label",
+    "component": {
+      "Text": {
+        "text": {
+          "literalString": "Arrives"
+        },
+        "usageHint": "caption"
+      }
+    }
+  },
+  {
+    "id": "arrival-time",
+    "component": {
+      "Text": {
+        "text": {
+          "path": "/arrivalTime"
+        },
+        "usageHint": "h3"
+      }
+    }
+  },
+  {
+    "id": "table2",
+    "component": {
+      "table-v2": {
+        "dataPath": "/rowsV2",
+        "columns": [
+          { "key": "name", "label": "姓名" },
+          { "key": "role", "label": "角色" },
+          { "key": "score", "label": "分数" }
+        ]
+      }
+    }
+  },
+  {
+   "id": "any-chart",
+  "component": {
+    "echart-any": {
+      "dataPath": "/chartOption"
+    }
+  }
+    },
+  {
+   "id": "any-chart",
+  "component": {
+    "echart-any": {
+      "dataPath": "/chartOption2"
+    }
+  }
+    }
 ]`
+/* {
+  "id": "surface-chart",
+  "component": {
+    "surface-chart": {
+      "dataPath": "/surfaceOption"
+    }
+  }
+}, */
+/* const DEFAULT_DATA_JSON = `{
+  "title": "Hello Table",
+  "rows": [
+    { "name": "Saya", "role": "Owner", "score": 98 },
+    { "name": "A2UI", "role": "Renderer", "score": 92 },
+    { "name": "TableV1", "role": "Custom Component", "score": 88 }
+  ],
+  "rowsV2": [
+    { "name": "React", "role": "Framework", "score": 95 },
+    { "name": "TailwindCSS", "role": "Styling", "score": 93 },
+    { "name": "TableV2", "role": "React Component", "score": 90 }
+  ]
+}` */
+/* const DEFAULT_DATA_JSON = `{
+  "flightNumber": "OS 87",
+  "date": "Mon, Dec 15",
+  "origin": "Vienna",
+  "destination": "New York",
+  "departureTime": "10:15 AM",
+  "status": "On Time",
+  "arrivalTime": "2:30 PM",
+    "surfaceOption": {
+    "tooltip": {},
+    "backgroundColor": "#fff",
+    "visualMap": {
+      "show": false,
+      "dimension": 2,
+      "min": -1,
+      "max": 1,
+      "inRange": {
+        "color": [
+          "#313695",
+          "#4575b4",
+          "#74add1",
+          "#abd9e9",
+          "#e0f3f8",
+          "#ffffbf",
+          "#fee090",
+          "#fdae61",
+          "#f46d43",
+          "#d73027",
+          "#a50026"
+        ]
+      }
+    },
+    "xAxis3D": {
+      "type": "value"
+    },
+    "yAxis3D": {
+      "type": "value"
+    },
+    "zAxis3D": {
+      "type": "value"
+    },
+    "grid3D": {
+      "viewControl": {}
+    },
+    "series": [
+      {
+        "type": "surface",
+        "wireframe": {},
+        "equation": {
+          "x": {
+            "step": 0.05
+          },
+          "y": {
+            "step": 0.05
+          },
+          "z": "__FUNCTION__:function(x, y) { if (Math.abs(x) < 0.1 && Math.abs(y) < 0.1) { return '-'; } return Math.sin(x * Math.PI) * Math.sin(y * Math.PI); }"
+        }
+      }
+    ]
+  },
+  "chartOption": {
+    "tooltip": {},
+    "backgroundColor": "#fff",
+    "visualMap": {
+      "show": false,
+      "dimension": 2,
+      "min": -1,
+      "max": 1,
+      "inRange": {
+        "color": [
+          "#313695",
+          "#4575b4",
+          "#74add1",
+          "#abd9e9",
+          "#e0f3f8",
+          "#ffffbf",
+          "#fee090",
+          "#fdae61",
+          "#f46d43",
+          "#d73027",
+          "#a50026"
+        ]
+      }
+    },
+    "xAxis3D": {
+      "type": "value"
+    },
+    "yAxis3D": {
+      "type": "value"
+    },
+    "zAxis3D": {
+      "type": "value"
+    },
+    "grid3D": {
+      "viewControl": {}
+    },
+    "series": [
+      {
+        "type": "surface",
+        "wireframe": {},
+        "equation": {
+          "x": {
+            "step": 0.05
+          },
+          "y": {
+            "step": 0.05
+          },
+          "z": "__FUNCTION__:function(x, y) { if (Math.abs(x) < 0.1 && Math.abs(y) < 0.1) { return '-'; } return Math.sin(x * Math.PI) * Math.sin(y * Math.PI); }"
+        }
+      }
+    ]
+  },
+  "rowsV2": [
+    { "name": "React", "role": "Framework", "score": 95 },
+    { "name": "TailwindCSS", "role": "Styling", "score": 93 },
+    { "name": "TableV2", "role": "React Component", "score": 90 }
+  ],
+  "chartOption2": {
+  "title": {
+    "text": "Stacked Line"
+  },
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "legend": {
+    "data": [
+      "Email",
+      "Union Ads",
+      "Video Ads",
+      "Direct",
+      "Search Engine"
+    ]
+  },
+  "grid": {
+    "left": "3%",
+    "right": "4%",
+    "bottom": "3%",
+    "containLabel": true
+  },
+  "toolbox": {
+    "feature": {
+      "saveAsImage": {}
+    }
+  },
+  "xAxis": {
+    "type": "category",
+    "boundaryGap": false,
+    "data": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
+  },
+  "yAxis": {
+    "type": "value"
+  },
+  "series": [
+    {
+      "name": "Email",
+      "type": "line",
+      "stack": "Total",
+      "data": [120, 132, 101, 134, 90, 230, 210]
+    },
+    {
+      "name": "Union Ads",
+      "type": "line",
+      "stack": "Total",
+      "data": [220, 182, 191, 234, 290, 330, 310]
+    },
+    {
+      "name": "Video Ads",
+      "type": "line",
+      "stack": "Total",
+      "data": [150, 232, 201, 154, 190, 330, 410]
+    },
+    {
+      "name": "Direct",
+      "type": "line",
+      "stack": "Total",
+      "data": [320, 332, 301, 334, 390, 330, 320]
+    },
+    {
+      "name": "Search Engine",
+      "type": "line",
+      "stack": "Total",
+      "data": [820, 932, 901, 934, 1290, 1330, 1320]
+    }
+  ]
+}
+}` */
 
 const DEFAULT_DATA_JSON = `{
-  "title": "Hello World"
+  "flightNumber": "OS 87",
+  "date": "Mon, Dec 15",
+  "origin": "Vienna",
+  "destination": "New York",
+  "departureTime": "10:15 AM",
+  "status": "On Time",
+  "arrivalTime": "2:30 PM",
+  "chartOption": {
+    "title": {
+      "text": "Rainfall vs Evaporation",
+      "subtext": "Fake Data"
+    },
+    "tooltip": {
+      "trigger": "axis"
+    },
+    "legend": {
+      "data": ["Rainfall", "Evaporation"]
+    },
+    "toolbox": {
+      "show": true,
+      "feature": {
+        "dataView": {
+          "show": true,
+          "readOnly": false
+        },
+        "magicType": {
+          "show": true,
+          "type": ["line", "bar"]
+        },
+        "restore": {
+          "show": true
+        },
+        "saveAsImage": {
+          "show": true
+        }
+      }
+    },
+    "calculable": true,
+    "xAxis": [
+      {
+        "type": "category",
+        "data": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+      }
+    ],
+    "yAxis": [
+      {
+        "type": "value"
+      }
+    ],
+    "series": [
+      {
+        "name": "Rainfall",
+        "type": "bar",
+        "data": [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3],
+        "markPoint": {
+          "data": [
+            { "type": "max", "name": "Max" },
+            { "type": "min", "name": "Min" }
+          ]
+        },
+        "markLine": {
+          "data": [
+            { "type": "average", "name": "Avg" }
+          ]
+        }
+      },
+      {
+        "name": "Evaporation",
+        "type": "bar",
+        "data": [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3],
+        "markPoint": {
+          "data": [
+            { "name": "Max", "value": 182.2, "xAxis": 7, "yAxis": 183 },
+            { "name": "Min", "value": 2.3, "xAxis": 11, "yAxis": 3 }
+          ]
+        },
+        "markLine": {
+          "data": [
+            { "type": "average", "name": "Avg" }
+          ]
+        }
+      }
+    ]
+  }
+  ,
+  "rowsV2": [
+    { "name": "React", "role": "Framework", "score": 95 },
+    { "name": "TailwindCSS", "role": "Styling", "score": 93 },
+    { "name": "TableV2", "role": "React Component", "score": 90 }
+  ],
+  "chartOption2": {
+  "title": {
+    "text": "Stacked Line"
+  },
+  "tooltip": {
+    "trigger": "axis"
+  },
+  "legend": {
+    "data": [
+      "Email",
+      "Union Ads",
+      "Video Ads",
+      "Direct",
+      "Search Engine"
+    ]
+  },
+  "grid": {
+    "left": "3%",
+    "right": "4%",
+    "bottom": "3%",
+    "containLabel": true
+  },
+  "toolbox": {
+    "feature": {
+      "saveAsImage": {}
+    }
+  },
+  "xAxis": {
+    "type": "category",
+    "boundaryGap": false,
+    "data": [
+      "Mon",
+      "Tue",
+      "Wed",
+      "Thu",
+      "Fri",
+      "Sat",
+      "Sun"
+    ]
+  },
+  "yAxis": {
+    "type": "value"
+  },
+  "series": [
+    {
+      "name": "Email",
+      "type": "line",
+      "stack": "Total",
+      "data": [120, 132, 101, 134, 90, 230, 210]
+    },
+    {
+      "name": "Union Ads",
+      "type": "line",
+      "stack": "Total",
+      "data": [220, 182, 191, 234, 290, 330, 310]
+    },
+    {
+      "name": "Video Ads",
+      "type": "line",
+      "stack": "Total",
+      "data": [150, 232, 201, 154, 190, 330, 410]
+    },
+    {
+      "name": "Direct",
+      "type": "line",
+      "stack": "Total",
+      "data": [320, 332, 301, 334, 390, 330, 320]
+    },
+    {
+      "name": "Search Engine",
+      "type": "line",
+      "stack": "Total",
+      "data": [820, 932, 901, 934, 1290, 1330, 1320]
+    }
+  ]
+}
 }`
 
 const DEFAULT_STYLES_JSON = `{
@@ -216,7 +936,7 @@ export function PlaygroundPage() {
       const extra =
         msg.includes('Circular dependency for component') ?
           '（常见原因：某个 component id 恰好等于某个字符串属性值，比如 id="body" 与 usageHint="body" 冲突；把该组件 id 改个名字即可。）'
-        : ''
+          : ''
       return { error: `${msg}${extra}` }
     }
   }, [
@@ -269,7 +989,7 @@ export function PlaygroundPage() {
           </div>
         </div>
 
-          <div className="mt-4 space-y-4">
+        <div className="mt-4 space-y-4">
           <div className="grid gap-3 md:grid-cols-3">
             <label className="block">
               <div className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200">surfaceId</div>
@@ -299,9 +1019,9 @@ export function PlaygroundPage() {
               className="h-[120px] w-full resize-none rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
             />
             {parsedStyles.error ? (
-              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-100">
+              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-100">
                 <div className="font-semibold">styles JSON 解析失败</div>
-                <div className="mt-1 break-words text-rose-100/90">{parsedStyles.error}</div>
+                <div className="mt-1 break-words text-gray-600/90">{parsedStyles.error}</div>
               </div>
             ) : null}
           </div>
@@ -315,9 +1035,9 @@ export function PlaygroundPage() {
               className="h-[260px] w-full resize-none rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
             />
             {parsedComponents.error ? (
-              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-100">
+              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
                 <div className="font-semibold">components JSON 解析失败</div>
-                <div className="mt-1 break-words text-rose-100/90">{parsedComponents.error}</div>
+                <div className="mt-1 break-words text-gray-600/90">{parsedComponents.error}</div>
               </div>
             ) : null}
           </div>
@@ -331,9 +1051,9 @@ export function PlaygroundPage() {
               className="h-[180px] w-full resize-none rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
             />
             {parsedData.error ? (
-              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-100">
+              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
                 <div className="font-semibold">data JSON 解析失败</div>
-                <div className="mt-1 break-words text-rose-100/90">{parsedData.error}</div>
+                <div className="mt-1 break-words text-gray-600/90">{parsedData.error}</div>
               </div>
             ) : null}
           </div>
@@ -348,9 +1068,9 @@ export function PlaygroundPage() {
 
         <div className="mt-4 rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-white/10 dark:bg-slate-950/40">
           {compiled.error ? (
-            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-rose-100">
+            <div className="rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
               <div className="font-semibold">无法渲染</div>
-              <div className="mt-1 break-words text-rose-100/90">{compiled.error}</div>
+              <div className="mt-1 break-words text-gray-600/90">{compiled.error}</div>
             </div>
           ) : (
             <a2ui-theme-provider>

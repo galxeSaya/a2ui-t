@@ -13,16 +13,16 @@ export const defaultA2uiTheme = {
       'border-br-12': true,
       'border-bw-0': true,
       'border-bs-s': true,
-      'color-bgc-p30': true,
-      'color-c-n100': true,
+      'color-bgc-n30': true,
+      'color-c-n0': true,
       'behavior-ho-70': true,
     },
     Card: {
-      'border-br-9': true,
+      'border-br-12': true,
       'border-bw-1': true,
       'border-bs-s': true,
-      'color-bc-n80': true,
-      'layout-p-4': true,
+      'color-bc-n90': true,
+      'layout-p-6': true,
       'color-bgc-n100': true,
     },
     CheckBox: {
@@ -31,7 +31,7 @@ export const defaultA2uiTheme = {
       element: {},
     },
     Column: {
-      'layout-g-2': true,
+      'layout-g-4': true,
       'layout-w-100': true,
     },
     DateTimeInput: {
@@ -60,7 +60,9 @@ export const defaultA2uiTheme = {
       label: {},
       element: {},
     },
-    Row: {},
+    Row: {
+      'layout-g-4': true,
+    },
     Slider: {
       container: {},
       label: {},
@@ -81,7 +83,7 @@ export const defaultA2uiTheme = {
         'typography-fs-n': true,
         'typography-w-400': true,
         'typography-sz-bm': true,
-        'color-c-n10': true,
+        'color-c-n5': true,
       },
       h1: {
         'typography-f-sf': true,
@@ -100,6 +102,8 @@ export const defaultA2uiTheme = {
         'typography-w-500': true,
         'typography-sz-bl': true,
         'layout-m-0': true,
+        'layout-mt-0': true,
+        'layout-mb-0': true,
       },
       h4: {
         'typography-f-sf': true,
@@ -113,12 +117,15 @@ export const defaultA2uiTheme = {
         'typography-sz-bm': true,
         'layout-m-0': true,
       },
-      body: {},
+      body: {
+        'layout-m-0': true,
+      },
       caption: {
         'typography-f-s': true,
         'typography-w-400': true,
         'typography-sz-bm': true,
         'opacity-o-70': true,
+        'layout-m-0': true,
       },
     },
     TextField: {
@@ -133,11 +140,23 @@ export const defaultA2uiTheme = {
     audio: {},
     body: {},
     button: {},
-    h1: {},
-    h2: {},
-    h3: {},
-    h4: {},
-    h5: {},
+    h1: {
+      margin: '0',
+    },
+    h2: {
+      margin: '0',
+    },
+    h3: {
+      margin: '0',
+      marginTop: '0',
+      marginBottom: '0',
+    },
+    h4: {
+      margin: '0',
+    },
+    h5: {
+      margin: '0',
+    },
     iframe: {},
     input: {},
     p: {},
@@ -160,35 +179,8 @@ export const defaultA2uiTheme = {
     em: [],
   },
   additionalStyles: {
-    Card: {
-      background:
-        'radial-gradient(circle at top left, rgba(6, 182, 212, 0.12), transparent 40%), radial-gradient(circle at bottom right, rgba(139, 92, 246, 0.12), transparent 40%), rgba(15, 23, 42, 0.65)',
-    },
-    Text: {
-      h1: {
-        color: 'transparent',
-        background: 'linear-gradient(135deg, #818cf8 0%, #22d3ee 100%)',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-      },
-      h2: {
-        color: 'transparent',
-        background: 'linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%)',
-        WebkitBackgroundClip: 'text',
-        backgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-      },
-      h3: {},
-      h4: {},
-      h5: {},
-      body: {},
-      caption: {},
-    },
-    Button: {
-      background: 'linear-gradient(135deg, #6366f1 0%, #22d3ee 100%)',
-      boxShadow: '0 6px 18px rgba(99, 102, 241, 0.25)',
-    },
+    Card: 'background: var(--n-100); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);',
+    Button: 'background: var(--n-30); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);',
   },
 }
 
