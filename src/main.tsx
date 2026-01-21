@@ -10,7 +10,7 @@ applyThemeMode(getInitialThemeMode())
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/a2ui-t">
       <App />
     </BrowserRouter>
   </React.StrictMode>,

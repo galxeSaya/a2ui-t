@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Redirecting...</title>
+    <script>
+      // GitHub Pages SPA fallback: redirect to /a2ui-t/ preserving path/query/hash
+      (function () {
+        var origin = '/a2ui-t'
+        var path = window.location.pathname.replace(origin, '')
+        var newUrl = origin + (path || '/') + window.location.search + window.location.hash
+        sessionStorage.setItem('a2ui-t-redirect', newUrl)
+        window.location.replace(origin + '/')
+      })()
+    </script>
+  </head>
+  <body>
+    Redirecting...
+  </body>
+</html>

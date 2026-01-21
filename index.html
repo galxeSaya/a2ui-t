@@ -5,6 +5,16 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>A2UI Playground</title>
+    <script>
+      // 若从 404 重定向回来，恢复原始路径
+      (function () {
+        const redirect = sessionStorage.getItem('a2ui-t-redirect')
+        if (redirect) {
+          sessionStorage.removeItem('a2ui-t-redirect')
+          history.replaceState(null, '', redirect)
+        }
+      })()
+    </script>
     <!-- Material Icons for A2UI Icon component -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
