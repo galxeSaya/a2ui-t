@@ -1,9 +1,12 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  plugins: [react()],
-  // 部署到 GitHub Pages 时需设置仓库名作为 base，避免资源 404
-  base: '/a2ui-t/',
+// 开发环境用根路径，生产（gh-pages）用仓库子路径
+export default defineConfig(({ mode }) => {
+  const isProd = mode === 'production'
+  return {
+    plugins: [react()],
+    base: isProd ? '/a2ui-t/' : '/',
+  }
 })
 

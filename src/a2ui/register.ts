@@ -4,6 +4,7 @@ import './custom/table-v1'
 import './custom/table-v2-wrapper.tsx'
 import './custom/echart-simple-surface-wrapper.tsx'
 import './custom/echart-any-wrapper.tsx'
+import './custom/tv-chart-wrapper.tsx'
 
 // 2) 初始化调色板（必须在组件使用前初始化）
 import { applyA2uiDefaultPalette } from './palette'

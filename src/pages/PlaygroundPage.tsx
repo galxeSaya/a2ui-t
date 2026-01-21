@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { A2UISurfaceView } from '../components/A2UISurfaceView'
 import { v0_8 } from '@a2ui/lit'
+import { bars } from '../a2ui/custom/tv-data'
 
 type A2uiProcessor = InstanceType<typeof v0_8.Data.A2uiMessageProcessor>
 type ServerToClientMessage = Parameters<A2uiProcessor['processMessages']>[0][number]
@@ -83,22 +84,39 @@ const DEFAULT_COMPONENTS_JSON = `[
       "Column": {
         "children": {
           "explicitList": [
+            "text-1",
             "header-row",
             "route-row",
             "divider",
             "times-row",
+            "divider",
+            "text-2",
             "any-chart-1",
+            "divider",
+            "text-3",
             "table2",
+            "divider",
+            "text-4",
             "tv-chart",
-          "any-chart-2",
-          "any-chart-3"
+            "divider",
+            "text-5",
+            "any-chart-2",
+            "any-chart-3"
           ]
         },
         "gap": "none",
         "alignment": "stretch"
       }
     }
-  },
+  },{
+  "id": "text-1",
+  "component": {
+    "Text": {
+      "text": { "literalString": "官方组件" },
+      "usageHint": "body"
+    }
+  }
+},
   {
     "id": "header-row",
     "component": {
@@ -341,7 +359,15 @@ const DEFAULT_COMPONENTS_JSON = `[
         "usageHint": "h3"
       }
     }
-  },
+  },{
+  "id": "text-2",
+  "component": {
+    "Text": {
+      "text": { "literalString": "三方组件-echart" },
+      "usageHint": "body"
+    }
+  }
+},
   {
    "id": "any-chart-1",
     "component": {
@@ -349,7 +375,15 @@ const DEFAULT_COMPONENTS_JSON = `[
         "dataPath": "/chartOption1"
       }
     }
-  },
+  },{
+  "id": "text-3",
+  "component": {
+    "Text": {
+      "text": { "literalString": "自定义表格组件" },
+      "usageHint": "body"
+    }
+  }
+},
   {
     "id": "table2",
     "component": {
@@ -362,20 +396,36 @@ const DEFAULT_COMPONENTS_JSON = `[
         ]
       }
     }
-  },
-  {
-   "id": "any-chart-2",
-    "component": {
-      "echart-any": {
-        "dataPath": "/chartOption2"
-      }
+  },{
+  "id": "text-4",
+  "component": {
+    "Text": {
+      "text": { "literalString": "三方组件-tradingview" },
+      "usageHint": "body"
     }
-  },
+  }
+},
   {
     "id": "tv-chart",
     "component": {
       "tv-chart": {
         "dataPath": "/tvData"
+      }
+    }
+  },{
+  "id": "text-5",
+  "component": {
+    "Text": {
+      "text": { "literalString": "三方组件-echart" },
+      "usageHint": "body"
+    }
+  }
+},
+  {
+   "id": "any-chart-2",
+    "component": {
+      "echart-any": {
+        "dataPath": "/chartOption2"
       }
     }
   },
@@ -822,8 +872,7 @@ const DEFAULT_DATA_JSON = `{
     }
   ]
 },
-  tvData: {
-  }
+  "tvData": ${JSON.stringify(bars)}
 }`
 
 const DEFAULT_STYLES_JSON = `{
@@ -944,7 +993,7 @@ function buildDataMessages(v: unknown, surfaceId: string): { messages: unknown[]
 }
 
 export function PlaygroundPage() {
-  const [surfaceId, setSurfaceId] = useState(DEFAULT_SURFACE_ID)
+  const [surfaceId] = useState(DEFAULT_SURFACE_ID)
   const [rootId, setRootId] = useState('root')
   const [stylesText, setStylesText] = useState(DEFAULT_STYLES_JSON)
   const [componentsText, setComponentsText] = useState(DEFAULT_COMPONENTS_JSON)
@@ -1046,7 +1095,7 @@ export function PlaygroundPage() {
             >
               重置 data
             </button>
-            <button
+            {/* <button
               className="rounded-xl bg-white/5 px-3 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10"
               onClick={() => {
                 setStylesText(DEFAULT_STYLES_JSON)
@@ -1056,20 +1105,20 @@ export function PlaygroundPage() {
               type="button"
             >
               重置 meta
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div className="mt-4 space-y-4">
           <div className="grid gap-3 md:grid-cols-3">
-            <label className="block">
+            {/* <label className="block">
               <div className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200">surfaceId</div>
               <input
                 value={surfaceId}
                 onChange={(e) => setSurfaceId(e.target.value)}
                 className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:border-indigo-400/40"
               />
-            </label>
+            </label> */}
             <label className="block">
               <div className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200">rootId</div>
               <input
