@@ -106,7 +106,7 @@ export function EchartAny(props: EchartAnyProps) {
 
   return (
     <div className="w-full">
-      <div ref={chartRef} className="w-full min-h-[280px]" />
+      <div ref={chartRef} className="w-full min-h-[320px]" />
     </div>
   )
 }

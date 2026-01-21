@@ -87,9 +87,10 @@ const DEFAULT_COMPONENTS_JSON = `[
             "route-row",
             "divider",
             "times-row",
+            "any-chart-1",
             "table2",
-            "any-chart",
-            "any-chart"
+          "any-chart-2",
+          "any-chart-3"
           ]
         },
         "gap": "none",
@@ -341,6 +342,14 @@ const DEFAULT_COMPONENTS_JSON = `[
     }
   },
   {
+   "id": "any-chart-1",
+    "component": {
+      "echart-any": {
+        "dataPath": "/chartOption1"
+      }
+    }
+  },
+  {
     "id": "table2",
     "component": {
       "table-v2": {
@@ -354,21 +363,21 @@ const DEFAULT_COMPONENTS_JSON = `[
     }
   },
   {
-   "id": "any-chart",
-  "component": {
-    "echart-any": {
-      "dataPath": "/chartOption"
+   "id": "any-chart-2",
+    "component": {
+      "echart-any": {
+        "dataPath": "/chartOption2"
+      }
     }
-  }
-    },
+  },
   {
-   "id": "any-chart",
-  "component": {
-    "echart-any": {
-      "dataPath": "/chartOption2"
+   "id": "any-chart-3",
+    "component": {
+      "echart-any": {
+        "dataPath": "/chartOption3"
+      }
     }
   }
-    }
 ]`
 /* {
   "id": "surface-chart",
@@ -594,9 +603,9 @@ const DEFAULT_DATA_JSON = `{
   "departureTime": "10:15 AM",
   "status": "On Time",
   "arrivalTime": "2:30 PM",
-  "chartOption": {
+  "chartOption1": {
     "title": {
-      "text": "Rainfall vs Evaporation",
+      "text": "",
       "subtext": "Fake Data"
     },
     "tooltip": {
@@ -670,16 +679,67 @@ const DEFAULT_DATA_JSON = `{
         }
       }
     ]
-  }
-  ,
+  },
   "rowsV2": [
     { "name": "React", "role": "Framework", "score": 95 },
     { "name": "TailwindCSS", "role": "Styling", "score": 93 },
     { "name": "TableV2", "role": "React Component", "score": 90 }
   ],
   "chartOption2": {
+    "tooltip": {},
+    "backgroundColor": "#fff",
+    "visualMap": {
+      "show": false,
+      "dimension": 2,
+      "min": -1,
+      "max": 1,
+      "inRange": {
+        "color": [
+          "#313695",
+          "#4575b4",
+          "#74add1",
+          "#abd9e9",
+          "#e0f3f8",
+          "#ffffbf",
+          "#fee090",
+          "#fdae61",
+          "#f46d43",
+          "#d73027",
+          "#a50026"
+        ]
+      }
+    },
+    "xAxis3D": {
+      "type": "value"
+    },
+    "yAxis3D": {
+      "type": "value"
+    },
+    "zAxis3D": {
+      "type": "value"
+    },
+    "grid3D": {
+      "viewControl": {}
+    },
+    "series": [
+      {
+        "type": "surface",
+        "wireframe": {},
+        "equation": {
+          "x": {
+            "step": 0.05
+          },
+          "y": {
+            "step": 0.05
+          },
+          "z": "__FUNCTION__:function(x, y) { if (Math.abs(x) < 0.1 && Math.abs(y) < 0.1) { return '-'; } return Math.sin(x * Math.PI) * Math.sin(y * Math.PI); }"
+        }
+      }
+    ]
+  },
+  "chartOption3": {
   "title": {
-    "text": "Stacked Line"
+    "text": ""
   },
   "tooltip": {
     "trigger": "axis"
