@@ -6,7 +6,8 @@ export type ThemeMode = 'light' | 'dark' | 'system'
 export function getInitialThemeMode(): ThemeMode {
   const raw = localStorage.getItem(STORAGE_KEY)
   if (raw === 'light' || raw === 'dark' || raw === 'system') return raw
-  return 'system'
+  // 默认浅色模式
+  return 'light'
 }
 
 export function resolveScheme(mode: ThemeMode): A2uiColorScheme {
