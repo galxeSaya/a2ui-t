@@ -16,8 +16,17 @@ export class EchartAnyElement extends HTMLElement {
   private _surfaceId: string | null = null
 
   connectedCallback() {
+    // 设置样式，确保元素能够填充父容器
+    if (!this.style.width && !this.style.flex) {
+      this.style.display = 'block'
+      this.style.width = '100%'
+      this.style.minWidth = '0' // 允许 flex 子元素收缩
+    }
+    
     if (!this._root) {
       const container = document.createElement('div')
+      container.style.width = '100%'
+      container.style.height = '100%'
       this.appendChild(container)
       this._root = createRoot(container)
       this.render()

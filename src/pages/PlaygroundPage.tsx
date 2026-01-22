@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { A2UISurfaceView } from '../components/A2UISurfaceView'
 import { v0_8 } from '@a2ui/lit'
 import { bars } from '../a2ui/custom/tv-data'
@@ -101,7 +101,10 @@ const DEFAULT_COMPONENTS_JSON = `[
             "divider",
             "text-5",
             "any-chart-2",
-            "any-chart-3"
+            "any-chart-3",
+            "divider",
+            "text-6",
+            "charts-row"
           ]
         },
         "gap": "none",
@@ -431,6 +434,46 @@ const DEFAULT_COMPONENTS_JSON = `[
   },
   {
    "id": "any-chart-3",
+    "component": {
+      "echart-any": {
+        "dataPath": "/chartOption3"
+      }
+    }
+  },
+  {
+    "id": "text-6",
+    "component": {
+      "Text": {
+        "text": { "literalString": "横向展示模块" },
+        "usageHint": "body"
+      }
+    }
+  },
+  {
+    "id": "charts-row",
+    "component": {
+      "Row": {
+        "children": {
+          "explicitList": [
+            "any-chart-3-1",
+            "any-chart-3-2"
+          ]
+        },
+        "distribution": "spaceEvenly",
+        "alignment": "stretch"
+      }
+    }
+  },
+  {
+   "id": "any-chart-3-1",
+    "component": {
+      "echart-any": {
+        "dataPath": "/chartOption3"
+      }
+    }
+  },
+  {
+   "id": "any-chart-3-2",
     "component": {
       "echart-any": {
         "dataPath": "/chartOption3"
@@ -998,6 +1041,8 @@ export function PlaygroundPage() {
   const [stylesText, setStylesText] = useState(DEFAULT_STYLES_JSON)
   const [componentsText, setComponentsText] = useState(DEFAULT_COMPONENTS_JSON)
   const [dataText, setDataText] = useState(DEFAULT_DATA_JSON)
+  const [windowWidth, setWindowWidth] = useState(() => typeof window !== 'undefined' ? window.innerWidth : 0)
+  const [isLeftPanelCollapsed, setIsLeftPanelCollapsed] = useState(false)
 
   const parsedStyles = useMemo(() => parseJsonSafe(stylesText), [stylesText])
   const parsedComponents = useMemo(() => parseJsonSafe(componentsText), [componentsText])
@@ -1070,32 +1115,78 @@ export function PlaygroundPage() {
     rootId,
   ])
 
+  // 监听窗口大小变化，触发重新渲染（使用防抖避免频繁重新渲染）
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout> | null = null
+
+    const handleResize = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+      timeoutId = setTimeout(() => {
+        setWindowWidth(window.innerWidth)
+      }, 150) // 150ms 防抖
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      if (timeoutId) {
+        clearTimeout(timeoutId)
+      }
+    }
+  }, [])
+
   return (
-    <div className="grid gap-6 lg:grid-cols-2">
-      <section className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.03] dark:shadow-none">
-        <div className="flex items-start justify-between gap-4">
+    <div className="flex gap-6">
+      {isLeftPanelCollapsed ? (
+        <button
+          className="flex-shrink-0 h-10 w-10 rounded-full border border-slate-200/70 bg-white shadow-sm hover:bg-slate-50 flex items-center justify-center dark:border-white/10 dark:bg-white/[0.03] dark:hover:bg-white/[0.05]"
+          onClick={() => setIsLeftPanelCollapsed(false)}
+          type="button"
+          title="展开编辑栏"
+        >
+          <svg className="h-5 w-5 text-slate-600 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      ) : (
+        <section className="min-w-0 flex-shrink-0 max-w-1/2 w-[400px] rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.03] dark:shadow-none">
+          <div>
+            <button
+              className="rounded-xl bg-white/5 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10 dark:bg-slate-800/50 dark:text-slate-400 dark:ring-white/10 dark:hover:bg-slate-700/50"
+              onClick={() => setIsLeftPanelCollapsed(true)}
+              type="button"
+              title="收起编辑栏"
+            >
+              <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+          </div>
           <div>
             <div className="text-sm font-semibold text-slate-900 dark:text-white">输入（对齐官网格式）</div>
             <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
               兼容两种“官网”：CopilotKit Composer（components 数组 + data 对象）与 Google A2UI（消息数组）
             </div>
           </div>
-          <div className="flex shrink-0 items-center gap-2">
-            <button
-              className="rounded-xl bg-white/5 px-3 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10"
-              onClick={() => setComponentsText(DEFAULT_COMPONENTS_JSON)}
-              type="button"
-            >
-              重置 components
-            </button>
-            <button
-              className="rounded-xl bg-white/5 px-3 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10"
-              onClick={() => setDataText(DEFAULT_DATA_JSON)}
-              type="button"
-            >
-              重置 data
-            </button>
-            {/* <button
+          <div className="flex items-start justify-between gap-4">
+            <div className="flex shrink-0 items-center gap-2">
+              <button
+                className="rounded-xl bg-white/5 pr-3 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10"
+                onClick={() => setComponentsText(DEFAULT_COMPONENTS_JSON)}
+                type="button"
+              >
+                重置 components
+              </button>
+              <button
+                className="rounded-xl bg-white/5 px-3 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10"
+                onClick={() => setDataText(DEFAULT_DATA_JSON)}
+                type="button"
+              >
+                重置 data
+              </button>
+              {/* <button
               className="rounded-xl bg-white/5 px-3 py-2 text-xs font-medium text-slate-500 ring-1 ring-white/10 hover:bg-white/10"
               onClick={() => {
                 setStylesText(DEFAULT_STYLES_JSON)
@@ -1106,12 +1197,12 @@ export function PlaygroundPage() {
             >
               重置 meta
             </button> */}
+            </div>
           </div>
-        </div>
 
-        <div className="mt-4 space-y-4">
-          <div className="grid gap-3 md:grid-cols-3">
-            {/* <label className="block">
+          <div className="mt-4 space-y-4">
+            <div className="grid gap-3 md:grid-cols-3">
+              {/* <label className="block">
               <div className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200">surfaceId</div>
               <input
                 value={surfaceId}
@@ -1119,68 +1210,69 @@ export function PlaygroundPage() {
                 className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:border-indigo-400/40"
               />
             </label> */}
-            <label className="block">
-              <div className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200">rootId</div>
-              <input
-                value={rootId}
-                onChange={(e) => setRootId(e.target.value)}
-                className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:border-indigo-400/40"
+              <label className="block">
+                <div className="mb-1 text-xs font-semibold text-slate-700 dark:text-slate-200">rootId</div>
+                <input
+                  value={rootId}
+                  onChange={(e) => setRootId(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs text-slate-900 outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:focus:border-indigo-400/40"
+                />
+              </label>
+              <div />
+            </div>
+
+            <div hidden>
+              <div className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">styles JSON（可选）</div>
+              <textarea
+                value={stylesText}
+                onChange={(e) => setStylesText(e.target.value)}
+                spellCheck={false}
+                className="h-[120px] w-full resize-none rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
               />
-            </label>
-            <div />
-          </div>
+              {parsedStyles.error ? (
+                <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-100">
+                  <div className="font-semibold">styles JSON 解析失败</div>
+                  <div className="mt-1 break-words text-gray-600/90">{parsedStyles.error}</div>
+                </div>
+              ) : null}
+            </div>
 
-          <div hidden>
-            <div className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">styles JSON（可选）</div>
-            <textarea
-              value={stylesText}
-              onChange={(e) => setStylesText(e.target.value)}
-              spellCheck={false}
-              className="h-[120px] w-full resize-none rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
-            />
-            {parsedStyles.error ? (
-              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-100">
-                <div className="font-semibold">styles JSON 解析失败</div>
-                <div className="mt-1 break-words text-gray-600/90">{parsedStyles.error}</div>
-              </div>
-            ) : null}
-          </div>
+            <div>
+              <div className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">components JSON</div>
+              <textarea
+                value={componentsText}
+                onChange={(e) => setComponentsText(e.target.value)}
+                spellCheck={false}
+                className="h-[30vh] w-full rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
+              />
+              {parsedComponents.error ? (
+                <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
+                  <div className="font-semibold">components JSON 解析失败</div>
+                  <div className="mt-1 break-words text-gray-600/90">{parsedComponents.error}</div>
+                </div>
+              ) : null}
+            </div>
 
-          <div>
-            <div className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">components JSON</div>
-            <textarea
-              value={componentsText}
-              onChange={(e) => setComponentsText(e.target.value)}
-              spellCheck={false}
-              className="h-[30vh] w-full rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
-            />
-            {parsedComponents.error ? (
-              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
-                <div className="font-semibold">components JSON 解析失败</div>
-                <div className="mt-1 break-words text-gray-600/90">{parsedComponents.error}</div>
-              </div>
-            ) : null}
+            <div>
+              <div className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">data JSON</div>
+              <textarea
+                value={dataText}
+                onChange={(e) => setDataText(e.target.value)}
+                spellCheck={false}
+                className="h-[30vh]  w-full rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
+              />
+              {parsedData.error ? (
+                <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
+                  <div className="font-semibold">data JSON 解析失败</div>
+                  <div className="mt-1 break-words text-gray-600/90">{parsedData.error}</div>
+                </div>
+              ) : null}
+            </div>
           </div>
+        </section>
+      )}
 
-          <div>
-            <div className="mb-2 text-xs font-semibold text-slate-700 dark:text-slate-200">data JSON</div>
-            <textarea
-              value={dataText}
-              onChange={(e) => setDataText(e.target.value)}
-              spellCheck={false}
-              className="h-[30vh]  w-full rounded-xl border border-slate-200 bg-white p-4 font-mono text-xs leading-5 text-slate-900 outline-none placeholder:text-slate-400 focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-400/10 dark:border-white/10 dark:bg-slate-950/60 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-indigo-400/40"
-            />
-            {parsedData.error ? (
-              <div className="mt-2 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-3 text-xs text-gray-600">
-                <div className="font-semibold">data JSON 解析失败</div>
-                <div className="mt-1 break-words text-gray-600/90">{parsedData.error}</div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.03] dark:shadow-none">
+      <section className="min-w-[50%] flex-1 flex-shrink-0 rounded-2xl border border-slate-200/70 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/[0.03] dark:shadow-none">
         <div className="text-sm font-semibold text-slate-900 dark:text-white">渲染预览</div>
         <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
           这里会渲染对应 JSON 生成的 UI（A2UI Web Components / Lit）
@@ -1193,12 +1285,12 @@ export function PlaygroundPage() {
               <div className="mt-1 break-words text-gray-600/90">{compiled.error}</div>
             </div>
           ) : (
-            <a2ui-theme-provider>
+            <a2ui-theme-provider key={windowWidth}>
               <A2UISurfaceView
                 surface={compiled.surface}
                 processor={compiled.processor}
                 surfaceId={compiled.surfaceId}
-                className="min-h-[460px] w-full overflow-auto rounded-xl bg-white p-4 ring-1 ring-slate-200 dark:bg-white/[0.02] dark:ring-white/10"
+                className="min-h-[460px] w-full overflow-hidden rounded-xl bg-white p-4 ring-1 ring-slate-200 dark:bg-white/[0.02] dark:ring-white/10"
               />
             </a2ui-theme-provider>
           )}

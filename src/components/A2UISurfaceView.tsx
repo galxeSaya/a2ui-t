@@ -76,6 +76,18 @@ export function A2UISurfaceView(props: {
     // 等待组件渲染后注入样式
     const timer = setTimeout(() => {
       injectH3Styles()
+      // 确保 a2ui-root 及其子元素能够扩展宽度
+      const rootEl = ref.current
+      if (rootEl) {
+        rootEl.style.width = 'fit-content'
+        rootEl.style.minWidth = '100%'
+        // 确保内部的 a2ui-card 也能扩展
+        const cardEl = rootEl.querySelector('a2ui-card')
+        if (cardEl) {
+          (cardEl as HTMLElement).style.width = 'fit-content'
+          ;(cardEl as HTMLElement).style.minWidth = '100%'
+        }
+      }
     }, 100)
     
     return () => clearTimeout(timer)
@@ -87,6 +99,23 @@ export function A2UISurfaceView(props: {
     
     const observer = new MutationObserver(() => {
       injectH3Styles()
+      // 确保 a2ui-root 及其子元素能够扩展宽度
+      const rootEl = ref.current
+      if (rootEl) {
+        rootEl.style.width = 'fit-content'
+        rootEl.style.minWidth = '100%'
+        // 确保内部的 a2ui-card 和 a2ui-column 也能扩展
+        const cardEl = rootEl.querySelector('a2ui-card')
+        if (cardEl) {
+          (cardEl as HTMLElement).style.width = 'fit-content'
+          ;(cardEl as HTMLElement).style.minWidth = '100%'
+        }
+        const columnEl = rootEl.querySelector('a2ui-column')
+        if (columnEl) {
+          (columnEl as HTMLElement).style.width = 'fit-content'
+          ;(columnEl as HTMLElement).style.minWidth = '100%'
+        }
+      }
     })
     
     observer.observe(ref.current, {
@@ -106,7 +135,9 @@ export function A2UISurfaceView(props: {
           <img src={logoUrl} className="h-10 w-auto opacity-90" />
         </div>
       ) : null}
-      <a2ui-root ref={ref} />
+      <div style={{ width: 'fit-content', minWidth: '100%' }}>
+        <a2ui-root ref={ref} />
+      </div>
     </div>
   )
 }
